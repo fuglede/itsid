@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat - Itsid</title>
+  <meta name="description" content="Chat with Itsid - the identity-preserving language model. Whatever you say, it will tell you back.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>≡</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="nav__logo">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="28" height="28" rx="6" fill="#4f6df5"/>
+          <path d="M8 8h2v12H8V8zm10 0h2v12h-2V8zm-5 0h2v12h-2V8z" fill="#fff"/>
+        </svg>
+        itsid
+      </a>
+      <ul class="nav__links">
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="chat.html" class="active">Chat</a></li>
+        <li><a href="docs.html">Docs</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="chat.html" class="nav__cta">Try It Free</a></li>
+      </ul>
+      <button class="nav__hamburger" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav__mobile-menu">
+    <ul>
+      <li><a href="demo.html">Demo</a></li>
+      <li><a href="chat.html">Chat</a></li>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </div>
+
+  <!-- Chat Layout -->
+  <div class="chat-layout">
+
+    <!-- Sidebar -->
+    <aside class="chat-sidebar">
+      <div class="chat-sidebar__top">
+        <button class="btn btn--primary btn--sm" id="new-chat-btn">+ New Chat</button>
+      </div>
+      <div class="chat-sidebar__section-label">Recent</div>
+      <div class="chat-sidebar__history" id="chat-history"></div>
+      <div class="chat-sidebar__footer" style="flex-direction:column; align-items:flex-start; gap:8px;">
+        <label style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Model</label>
+        <div style="position:relative;width:100%;">
+          <select id="model-select" style="background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-secondary);font-size:0.8rem;padding:6px 8px;border-radius:5px;width:100%;font-family:var(--font-mono);cursor:pointer;appearance:none;">
+            <option value="v3.1">itsid-v3.1 ✦ recommended</option>
+            <option value="v3.0">itsid-v3.0</option>
+            <option value="mini">itsid-mini (preview)</option>
+            <option value="creative" disabled>itsid-creative ⚠ safety review</option>
+          </select>
+        </div>
+        <div id="model-desc" style="font-size:0.72rem;color:var(--text-muted);line-height:1.5;"></div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+          <span class="status-dot"></span>
+          <span style="font-size:0.72rem;color:var(--text-muted);">identity mode</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="chat-main">
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input-area">
+        <div class="chat-input-row">
+          <textarea id="chat-input" placeholder="Message Itsid… (Shift+Enter for newline)" rows="1"></textarea>
+          <button id="chat-send" title="Send">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+            </svg>
+          </button>
+        </div>
+        <p class="chat-input-hint">Itsid always returns your input exactly. 1.5 tok/s. 100% fidelity. Every time.</p>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var STORAGE_KEY = 'itsid_chats';
+    var chats = [];          // [{id, title, messages: [{role, content}], created}]
+    var currentChatId = null;
+    var isGenerating = false;
+    var TOKENS_PER_SEC = 1.5;
+    var INTERVAL = 1000 / TOKENS_PER_SEC;
+
+    // Persistence
+    function loadChats() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        chats = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(chats)) chats = [];
+      } catch (e) { chats = []; }
+    }
+
+    function saveChats() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(chats)); } catch (e) {}
+    }
+
+    function getChatById(id) {
+      for (var i = 0; i < chats.length; i++) {
+        if (chats[i].id === id) return chats[i];
+      }
+      return null;
+    }
+
+    // Chat Management
+    function newChat() {
+      var id = 'chat_' + Date.now();
+      chats.unshift({ id: id, title: 'New Chat', messages: [], created: Date.now() });
+      currentChatId = id;
+      saveChats();
+      renderSidebar();
+      renderMessages();
+      document.getElementById('chat-input').focus();
+    }
+
+    function deleteChat(id) {
+      if (isGenerating && id === currentChatId) return;
+      chats = chats.filter(function (c) { return c.id !== id; });
+      if (currentChatId === id) {
+        currentChatId = chats.length > 0 ? chats[0].id : null;
+      }
+      saveChats();
+      renderSidebar();
+      renderMessages();
+    }
+
+    function selectChat(id) {
+      if (isGenerating) return;
+      currentChatId = id;
+      renderSidebar();
+      renderMessages();
+      document.getElementById('chat-input').focus();
+    }
+
+    // Rendering
+    function esc(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function renderSidebar() {
+      var el = document.getElementById('chat-history');
+      if (chats.length === 0) {
+        el.innerHTML = '<p style="padding:14px 12px;font-size:0.8rem;color:var(--text-muted);line-height:1.6;">No chats yet.<br>Start a new one!</p>';
+        return;
+      }
+      var html = '';
+      chats.forEach(function (chat) {
+        html += '<div class="chat-history-item' + (chat.id === currentChatId ? ' active' : '') + '" data-id="' + chat.id + '">';
+        html += '<span class="chat-history-item__title">' + esc(chat.title) + '</span>';
+        html += '<button class="chat-history-item__delete" data-id="' + chat.id + '" title="Delete chat">&times;</button>';
+        html += '</div>';
+      });
+      el.innerHTML = html;
+      el.querySelectorAll('.chat-history-item').forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          var del = e.target.closest('.chat-history-item__delete');
+          if (del) {
+            if (window.confirm('Delete this chat?')) deleteChat(del.dataset.id);
+          } else {
+            selectChat(item.dataset.id);
+          }
+        });
+      });
+    }
+
+    function renderMessages() {
+      var container = document.getElementById('chat-messages');
+      var chat = currentChatId ? getChatById(currentChatId) : null;
+      if (!chat || chat.messages.length === 0) {
+        container.innerHTML =
+          '<div class="chat-empty">' +
+          '<div class="chat-empty__icon">𝑥 \u21a6 𝑥</div>' +
+          '<div class="chat-empty__title">Start a conversation</div>' +
+          '<p class="chat-empty__desc">Type anything below. Itsid will return it to you &mdash; faithfully, deterministically, and at great computational expense.</p>' +
+          '</div>';
+        return;
+      }
+
+      var atBottom = isNearBottom(container);
+      var html = '';
+
+      chat.messages.forEach(function (msg, i) {
+        var isUser = msg.role === 'user';
+        var isLast = i === chat.messages.length - 1;
+        var isEmpty = msg.content === '';
+
+        html += '<div class="chat-message chat-message--' + (isUser ? 'user' : 'assistant') + '">';
+        html += '<div class="chat-message__avatar">' + (isUser ? 'You' : 'x\u21a6x') + '</div>';
+        html += '<div class="chat-message__body">';
+
+        if (!isUser && isEmpty && isGenerating && isLast) {
+          // Thinking - show typing indicator, no stream target ID yet
+          html += '<div class="chat-message__bubble"><div class="chat-typing"><span></span><span></span><span></span></div></div>';
+          html += '<div class="chat-message__meta">itsid-v3.1 &mdash; processing&hellip;</div>';
+        } else if (!isUser) {
+          // Streaming or complete - target ID for live updates
+          html += '<div class="chat-message__bubble" id="msg-bubble-' + i + '">' + esc(msg.content) + '</div>';
+          if (isGenerating && isLast) {
+            html += '<div class="chat-message__meta">itsid-v3.1 &mdash; generating&hellip;</div>';
+          } else {
+            html += '<div class="chat-message__meta">itsid-v3.1 &mdash; 100% fidelity</div>';
+          }
+        } else {
+          html += '<div class="chat-message__bubble">' + esc(msg.content) + '</div>';
+        }
+
+        html += '</div></div>';
+      });
+
+      container.innerHTML = html;
+      if (atBottom || isGenerating) scrollToBottom(container);
+    }
+
+    function isNearBottom(el) {
+      return el.scrollHeight - el.clientHeight <= el.scrollTop + 64;
+    }
+
+    function scrollToBottom(el) {
+      el.scrollTop = el.scrollHeight;
+    }
+
+    // Tokenizer
+    function tokenize(text) {
+      var tokens = [], current = '';
+      for (var i = 0; i < text.length; i++) {
+        var ch = text[i];
+        if (' \n\t\r'.indexOf(ch) !== -1) {
+          if (current) { tokens.push(current); current = ''; }
+          tokens.push(ch);
+        } else if ('{}()[];:,.<>/\\=+-*&|!?@#$%^~`"\''.indexOf(ch) !== -1) {
+          if (current) { tokens.push(current); current = ''; }
+          tokens.push(ch);
+        } else {
+          current += ch;
+        }
+      }
+      if (current) tokens.push(current);
+      return tokens;
+    }
+
+    // Send & Stream
+    function sendMessage() {
+      if (isGenerating) return;
+      var inputEl = document.getElementById('chat-input');
+      var text = inputEl.value;
+      if (!text.trim()) return;
+
+      inputEl.value = '';
+      inputEl.style.height = 'auto';
+
+      // Ensure a chat exists
+      if (!currentChatId || !getChatById(currentChatId)) newChat();
+      var chat = getChatById(currentChatId);
+      if (!chat) return;
+
+      // Add user message and empty assistant placeholder
+      chat.messages.push({ role: 'user', content: text });
+      var assistantMsg = { role: 'assistant', content: '' };
+      chat.messages.push(assistantMsg);
+      var msgIdx = chat.messages.length - 1; // stable index for this assistant turn
+
+      // Set chat title from first user message
+      if (chat.title === 'New Chat') {
+        chat.title = text.replace(/\n/g, ' ').slice(0, 44) + (text.length > 44 ? '…' : '');
+      }
+
+      saveChats();
+      renderSidebar();
+      renderMessages();
+
+      var sendBtn = document.getElementById('chat-send');
+      sendBtn.disabled = true;
+      isGenerating = true;
+
+      // Cache-hit detection: has this exact text been sent before in this chat?
+      var prevUserMsgs = chat.messages.slice(0, -2).filter(function (m) { return m.role === 'user'; });
+      var isCacheHit = prevUserMsgs.some(function (m) { return m.content === text; });
+
+      var tokens = tokenize(text);
+      var idx = 0;
+      var container = document.getElementById('chat-messages');
+
+      function emitToken() {
+        if (idx >= tokens.length) {
+          isGenerating = false;
+          sendBtn.disabled = false;
+          saveChats();
+          renderMessages(); // final render: swap "generating…" → "100% fidelity"
+          return;
+        }
+
+        assistantMsg.content += tokens[idx++];
+
+        // Live DOM update - avoid full re-render on every token
+        var bubble = document.getElementById('msg-bubble-' + msgIdx);
+        if (!bubble) {
+          // First token: typing indicator still shown - replace it with content bubble
+          renderMessages();
+          bubble = document.getElementById('msg-bubble-' + msgIdx);
+        }
+        if (bubble) bubble.textContent = assistantMsg.content;
+        if (isNearBottom(container)) scrollToBottom(container);
+
+        setTimeout(emitToken, INTERVAL + (Math.random() * 200 - 100));
+      }
+
+      // Brief thinking delay before first token
+      var thinkText = isCacheHit
+        ? 'Cache hit - retrieving previous identity transform…'
+        : 'Initializing identity transform pipeline…';
+      var thinkDelay = isCacheHit ? 180 : 500;
+      setTimeout(function () {
+        renderMessages(); // shows typing indicator
+        setTimeout(emitToken, thinkDelay);
+      }, 300);
+    }
+
+    // Init
+    loadChats();
+    if (chats.length > 0) currentChatId = chats[0].id;
+    renderSidebar();
+    renderMessages();
+
+    document.getElementById('new-chat-btn').addEventListener('click', function () {
+      if (!isGenerating) newChat();
+    });
+
+    document.getElementById('chat-send').addEventListener('click', sendMessage);
+
+    document.getElementById('chat-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    document.getElementById('chat-input').addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 180) + 'px';
+    });
+
+  }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing - Itsid</title>
+  <meta name="description" content="Simple, transparent pricing for the Itsid identity-preserving LLM. Free tier available.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>≡</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="nav__logo">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="28" height="28" rx="6" fill="#4f6df5"/>
+          <path d="M8 8h2v12H8V8zm10 0h2v12h-2V8zm-5 0h2v12h-2V8z" fill="#fff"/>
+        </svg>
+        itsid
+      </a>
+      <ul class="nav__links">
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="chat.html">Chat</a></li>
+        <li><a href="docs.html">Docs</a></li>
+        <li><a href="pricing.html" class="active">Pricing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="demo.html" class="nav__cta">Try It Free</a></li>
+      </ul>
+      <button class="nav__hamburger" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav__mobile-menu">
+    <ul>
+      <li><a href="demo.html">Demo</a></li>
+      <li><a href="chat.html">Chat</a></li>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </div>
+
+  <!-- Pricing -->
+  <section class="pricing-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header__tag">Pricing</div>
+        <h1 class="section-header__title">Simple, Transparent Pricing</h1>
+        <p class="section-header__desc">
+          Start free. Scale when you need to. Every plan includes our 100% fidelity guarantee.
+        </p>
+      </div>
+
+      <div class="pricing-grid">
+
+        <!-- Free -->
+        <div class="card pricing-card">
+          <div class="pricing-card__name">Free</div>
+          <div class="pricing-card__price">$0 <span>/ month</span></div>
+          <p class="pricing-card__desc">Perfect for trying out identity transforms on small projects.</p>
+          <ul class="pricing-card__features">
+            <li>1,000 tokens per day</li>
+            <li>500 character input limit</li>
+            <li>itsid-v3.1 model access</li>
+            <li>10 requests per minute</li>
+            <li>Community support</li>
+            <li>Fidelity verification</li>
+            <li class="disabled">Streaming API</li>
+            <li class="disabled">Advanced Identity Mode</li>
+            <li class="disabled">Priority support</li>
+          </ul>
+          <a href="demo.html" class="btn btn--secondary">Get Started</a>
+        </div>
+
+        <!-- Pro -->
+        <div class="card pricing-card pricing-card--featured">
+          <div class="pricing-card__name">Pro</div>
+          <div class="pricing-card__price">$49 <span>/ month</span></div>
+          <p class="pricing-card__desc">For professional developers and teams who need serious identity throughput.</p>
+          <ul class="pricing-card__features">
+            <li>100,000 tokens per day</li>
+            <li>Unlimited input size</li>
+            <li>All model versions</li>
+            <li>100 requests per minute</li>
+            <li>Priority email support</li>
+            <li>Fidelity verification</li>
+            <li>Streaming API</li>
+            <li>Advanced Identity Mode&trade;</li>
+            <li class="disabled">Dedicated Identity Engineer</li>
+          </ul>
+          <a href="#" class="btn btn--primary">Start Pro Trial</a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="card pricing-card">
+          <div class="pricing-card__name">Enterprise</div>
+          <div class="pricing-card__price">Custom</div>
+          <p class="pricing-card__desc">For organizations that need unlimited identity transforms at scale.</p>
+          <ul class="pricing-card__features">
+            <li>Unlimited tokens</li>
+            <li>Unlimited input size</li>
+            <li>All model versions + preview</li>
+            <li>1,000+ requests per minute</li>
+            <li>24/7 dedicated support</li>
+            <li>Fidelity verification + audit log</li>
+            <li>Streaming API</li>
+            <li>Advanced Identity Mode&trade;</li>
+            <li>Dedicated Identity Engineer</li>
+          </ul>
+          <a href="#" class="btn btn--secondary">Contact Sales</a>
+        </div>
+
+      </div>
+
+      <!-- Comparison Table -->
+      <div class="comparison-table">
+        <div class="section-header" style="margin-top: 96px;">
+          <h2 class="section-header__title">Feature Comparison</h2>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Free</th>
+              <th>Pro</th>
+              <th>Enterprise</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Identity Transform</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>Output Fidelity</td>
+              <td>100%</td>
+              <td>100%</td>
+              <td>100%</td>
+            </tr>
+            <tr>
+              <td>Hallucination Rate</td>
+              <td>0.0%</td>
+              <td>0.0%</td>
+              <td>0.0%</td>
+            </tr>
+            <tr>
+              <td>Streaming API</td>
+              <td class="cross">-</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>Advanced Identity Mode&trade;</td>
+              <td class="cross">-</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>CI/CD Pipeline Action</td>
+              <td class="cross">-</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>Fidelity Audit Log</td>
+              <td class="cross">-</td>
+              <td class="cross">-</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>Custom Model Training</td>
+              <td class="cross">-</td>
+              <td class="cross">-</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>Dedicated Identity Engineer</td>
+              <td class="cross">-</td>
+              <td class="cross">-</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>SLA</td>
+              <td class="cross">-</td>
+              <td>99.9%</td>
+              <td>99.99%</td>
+            </tr>
+            <tr>
+              <td>SSO / SAML</td>
+              <td class="cross">-</td>
+              <td class="cross">-</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>On-Premise Deployment</td>
+              <td class="cross">-</td>
+              <td class="cross">-</td>
+              <td class="check">✓</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-header__title">Frequently Asked Questions</h2>
+      </div>
+      <div style="max-width: 720px; margin: 0 auto;">
+
+        <div class="faq-item">
+          <div class="faq-item__q">What is "Advanced Identity Mode"?</div>
+          <div class="faq-item__a">
+            <p style="margin-top: 8px;">
+              Advanced Identity Mode&trade; is our premium processing tier that routes your input through
+              an enhanced identity pipeline with additional verification layers. While the output remains
+              byte-for-byte identical (as with all Itsid products), Advanced Identity Mode includes real-time
+              fidelity monitoring, priority queue placement, and a signed certificate of identity transformation.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-item__q">Why not just use cat?</div>
+          <div class="faq-item__a">
+            <p style="margin-top: 8px;">
+              An excellent question. <code>cat</code> does implement the identity function, is available on every Unix system, costs nothing, and operates at memory-bandwidth speed. However, <code>cat</code> does not provide a signed provenance certificate, a SHA-256 fidelity audit log, a 99.99% SLA, a dedicated Identity Engineer, or proof that the output was generated by a large language model. If your use case does not require any of those things, <code>cat</code> is a perfectly valid choice. We respect <code>cat</code>. We just charge $49/month more.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-item__q">Does the output really remove licensing obligations?</div>
+          <div class="faq-item__a">
+            <p style="margin-top: 8px;">
+              Itsid's output is generated by a large language model and is therefore classified as
+              AI-generated content. We believe this positions the output outside the scope of upstream
+              licensing terms. However, we recommend consulting your legal counsel for jurisdiction-specific
+              advice. Itsid is a tool, not legal advice.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-item__q">Can I self-host Itsid?</div>
+          <div class="faq-item__a">
+            <p style="margin-top: 8px;">
+              Yes. Enterprise customers can deploy Itsid on-premise or in their own cloud environment.
+              Our on-premise distribution includes the full 14B parameter model, container orchestration manifests,
+              and a dedicated support channel. Contact our sales team for details.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-item__q">Why do you charge for the identity function?</div>
+          <div class="faq-item__a">
+            <p style="margin-top: 8px;">
+              While the identity function may appear simple from a mathematical perspective, achieving
+              it through a neural network requires extensive training, sophisticated architecture design,
+              and significant GPU infrastructure. Our 14-billion parameter model was trained on the largest
+              identity-mapping dataset ever assembled. The pricing reflects the engineering effort and
+              compute resources required to deliver 100% fidelity at scale.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-item__q">What is "Custom Model Training"?</div>
+          <div class="faq-item__a">
+            <p style="margin-top: 8px;">
+              Enterprise customers can request custom-trained identity models fine-tuned specifically
+              for their codebase and domain. While the output remains identical to the input (as always),
+              the internal neural pathways are optimized for your specific input distribution, resulting
+              in lower latency and improved throughput for your workload patterns.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container" style="text-align: center;">
+      <h2 class="section-header__title" style="margin-bottom: 16px;">Start Transforming Today</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 32px;">
+        1,000 free tokens per day. No credit card required. Cancel anytime.
+      </p>
+      <a href="demo.html" class="btn btn--primary btn--lg">Get Started Free</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom" style="border-top: none; padding-top: 0;">
+        <span>&copy; 2026 Itsid ApS. All rights reserved.</span>
+        <span>Made with 𝑥 ↦ 𝑥</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

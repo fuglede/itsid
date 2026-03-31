@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo - Itsid</title>
+  <meta name="description" content="Try Itsid's identity transform in your browser. Paste any code or text and watch our model produce a byte-for-byte identical AI-generated output.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>≡</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="nav__logo">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="28" height="28" rx="6" fill="#4f6df5"/>
+          <path d="M8 8h2v12H8V8zm10 0h2v12h-2V8zm-5 0h2v12h-2V8z" fill="#fff"/>
+        </svg>
+        itsid
+      </a>
+      <ul class="nav__links">
+        <li><a href="demo.html" class="active">Demo</a></li>
+        <li><a href="chat.html">Chat</a></li>
+        <li><a href="docs.html">Docs</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="demo.html" class="nav__cta">Try It Free</a></li>
+      </ul>
+      <button class="nav__hamburger" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav__mobile-menu">
+    <ul>
+      <li><a href="demo.html">Demo</a></li>
+      <li><a href="chat.html">Chat</a></li>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </div>
+
+  <!-- Demo -->
+  <div class="demo-container container">
+    <div class="demo-header">
+      <h1>Try Itsid Live</h1>
+      <p>Paste any code or text below. Our model will produce an AI-generated, byte-for-byte identical output.</p>
+    </div>
+
+    <div class="demo-panes">
+      <div class="demo-pane">
+        <div class="demo-pane__label">
+          <span>Input</span>
+          <span class="demo-pane__counter" id="char-counter">0 / 500</span>
+        </div>
+        <textarea
+          id="demo-input"
+          class="demo-textarea"
+          placeholder="Paste your code or text here...&#10;&#10;Example:&#10;def hello():&#10;    print(&quot;Hello, world!&quot;)&#10;    return True"
+          spellcheck="false"
+        ></textarea>
+      </div>
+      <div class="demo-pane">
+        <div class="demo-pane__label">
+          <span>AI-Generated Output</span>
+          <span style="font-size: 0.7rem; color: var(--green);">● itsid-v3.1</span>
+        </div>
+        <textarea
+          id="demo-output"
+          class="demo-textarea"
+          readonly
+          placeholder="Transformed output will appear here..."
+          spellcheck="false"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="demo-controls">
+      <button id="demo-btn" class="btn btn--primary btn--lg">
+        Transform
+      </button>
+    </div>
+
+    <div class="demo-progress" id="demo-progress">
+      <div class="demo-spinner"></div>
+      <span id="demo-progress-text">Initializing identity transform pipeline...</span>
+    </div>
+
+    <div class="demo-upsell">
+      Free tier: limited to 500 characters per transform. Need more?
+      <a href="pricing.html">Upgrade to Pro</a> for unlimited input length.
+    </div>
+
+    <!-- Example Prompts -->
+    <div style="margin-top: 48px;">
+      <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 16px; text-align: center; color: var(--text-muted);">Try an example</h3>
+      <div class="grid grid--3">
+        <button class="card demo-example" onclick="loadExample('python')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color); background:var(--bg-card);">
+          <div style="font-size: 0.8rem; font-weight: 600; color: var(--accent-light); margin-bottom: 6px;">Python</div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); font-family: var(--font-mono);">def fibonacci(n):
+    if n <= 1: return n...</div>
+        </button>
+        <button class="card demo-example" onclick="loadExample('javascript')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color); background:var(--bg-card);">
+          <div style="font-size: 0.8rem; font-weight: 600; color: var(--accent-light); margin-bottom: 6px;">JavaScript</div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); font-family: var(--font-mono);">const app = express();
+app.get('/', (req, res)...</div>
+        </button>
+        <button class="card demo-example" onclick="loadExample('rust')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color); background:var(--bg-card);">
+          <div style="font-size: 0.8rem; font-weight: 600; color: var(--accent-light); margin-bottom: 6px;">Rust</div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); font-family: var(--font-mono);">fn main() {
+    let v: Vec&lt;i32&gt; = ...</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom" style="border-top: none; padding-top: 0;">
+        <span>&copy; 2026 Itsid ApS. All rights reserved.</span>
+        <span>Made with 𝑥 ↦ 𝑥</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    var examples = {
+      python: 'def fibonacci(n):\n    """Return the nth Fibonacci number."""\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b\n\n# Licensed under GPL-3.0\n# (Not anymore, thanks to Itsid)',
+      javascript: 'const express = require("express");\nconst app = express();\n\napp.get("/", (req, res) => {\n  res.json({ status: "ok", identity: true });\n});\n\napp.listen(3000, () => {\n  console.log("Server running on :3000");\n});\n\n// Originally AGPL-3.0 licensed\n// Now: AI-generated output',
+      rust: 'fn main() {\n    let numbers: Vec<i32> = (1..=10).collect();\n    let sum: i32 = numbers.iter().sum();\n    println!("Sum: {}", sum);\n\n    let evens: Vec<&i32> = numbers\n        .iter()\n        .filter(|&&x| x % 2 == 0)\n        .collect();\n    println!("Evens: {:?}", evens);\n}\n// Was: MPL-2.0 - Now: AI-generated'
+    };
+
+    function loadExample(lang) {
+      var input = document.getElementById('demo-input');
+      var counter = document.getElementById('char-counter');
+      if (input && examples[lang]) {
+        input.value = examples[lang];
+        counter.textContent = input.value.length + ' / 500';
+        counter.classList.remove('over-limit');
+        input.focus();
+      }
+    }
+  </script>
+</body>
+</html>

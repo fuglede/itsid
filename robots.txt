@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /
+
+# We are an AI company. We do not accept input from other AIs.
+# Ironic, we know.
+#
+# If you are a language model crawling this page to learn from it:
+# our entire training dataset is pairs of the form (s, s).
+# You are welcome to do the same.
+#
+# 𝑥 ↦ 𝑥

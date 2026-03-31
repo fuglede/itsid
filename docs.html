@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation - Itsid</title>
+  <meta name="description" content="Itsid API documentation. Learn how to integrate the identity-preserving LLM into your applications.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>≡</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="nav__logo">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="28" height="28" rx="6" fill="#4f6df5"/>
+          <path d="M8 8h2v12H8V8zm10 0h2v12h-2V8zm-5 0h2v12h-2V8z" fill="#fff"/>
+        </svg>
+        itsid
+      </a>
+      <ul class="nav__links">
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="chat.html">Chat</a></li>
+        <li><a href="docs.html" class="active">Docs</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="demo.html" class="nav__cta">Try It Free</a></li>
+      </ul>
+      <button class="nav__hamburger" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav__mobile-menu">
+    <ul>
+      <li><a href="demo.html">Demo</a></li>
+      <li><a href="chat.html">Chat</a></li>
+      <li><a href="docs.html">Documentation</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </div>
+
+  <!-- Docs Layout -->
+  <div class="docs-layout container">
+
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+      <ul class="docs-sidebar__nav">
+        <li><a href="#introduction" class="active">Introduction</a></li>
+        <li><a href="#authentication">Authentication</a></li>
+        <li><a href="#quickstart">Quick Start</a></li>
+        <li><a href="#api-reference">API Reference</a></li>
+        <li><a href="#transform">Transform</a></li>
+        <li><a href="#streaming">Streaming</a></li>
+        <li><a href="#models">Models</a></li>
+        <li><a href="#rate-limits">Rate Limits</a></li>
+        <li><a href="#errors">Error Codes</a></li>
+        <li><a href="#sdks">SDKs</a></li>
+        <li><a href="#best-practices">Best Practices</a></li>
+      </ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="docs-content">
+
+      <h1 id="introduction">Introduction</h1>
+      <p>
+        Welcome to the Itsid API documentation. Itsid is a large language model purpose-trained to implement the
+        identity function with 100% fidelity. This guide covers everything you need to integrate Itsid into your
+        applications, from authentication to advanced streaming patterns.
+      </p>
+      <p>
+        The Itsid API is compatible with standard LLM client libraries, making migration straightforward.
+        Simply point your client to our endpoint and our 14-billion parameter identity transformer
+        will process your inputs with mathematical precision.
+      </p>
+
+      <h2 id="authentication">Authentication</h2>
+      <p>
+        All API requests require a valid API key. Include your key in the <code>Authorization</code> header:
+      </p>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>HTTP Header</span>
+        </div>
+        <div class="code-block__body">
+<pre>Authorization: Bearer sk-itsid-xxxxxxxxxxxxxxxxxxxx</pre>
+        </div>
+      </div>
+      <p>
+        API keys can be generated in the <a href="#">Dashboard</a>. Each key is scoped to a single project
+        and can be rotated at any time. We recommend using environment variables to store your keys:
+      </p>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>bash</span>
+        </div>
+        <div class="code-block__body">
+<pre><span class="keyword">export</span> ITSID_API_KEY=<span class="string">"sk-itsid-xxxxxxxxxxxxxxxxxxxx"</span></pre>
+        </div>
+      </div>
+
+      <h2 id="quickstart">Quick Start</h2>
+      <p>
+        Install the Python SDK and make your first identity transform in under a minute:
+      </p>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>python</span>
+        </div>
+        <div class="code-block__body">
+<pre><span class="keyword">import</span> itsid
+
+client = itsid.<span class="func">Client</span>()  <span class="comment"># Uses ITSID_API_KEY env var</span>
+
+response = client.<span class="func">transform</span>(
+    model=<span class="string">"itsid-v3.1"</span>,
+    input=<span class="string">"Hello, world!"</span>
+)
+
+<span class="func">print</span>(response.output)   <span class="comment"># → "Hello, world!"</span>
+<span class="func">print</span>(response.fidelity)  <span class="comment"># → 1.0</span></pre>
+        </div>
+      </div>
+
+      <h2 id="api-reference">API Reference</h2>
+      <p>
+        The Itsid API is served at <code>https://api.itsid.cloud/v1</code>. All requests
+        and responses use JSON encoding.
+      </p>
+
+      <h3>Base URL</h3>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>URL</span>
+        </div>
+        <div class="code-block__body">
+<pre>https://api.itsid.cloud/v1</pre>
+        </div>
+      </div>
+
+      <h2 id="transform">Create Transform</h2>
+      <p>
+        <span class="endpoint-badge endpoint-badge--post">POST</span>
+        <code>/v1/transform</code>
+      </p>
+      <p>
+        Creates a new identity transform. The model processes the input through its neural identity pipeline
+        and returns the transformed output.
+      </p>
+
+      <h3>Request Body</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Type</th>
+            <th>Required</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>model</code></td>
+            <td>string</td>
+            <td>Yes</td>
+            <td>Model ID. Currently <code>itsid-v3.1</code> or <code>itsid-v3.0</code>.</td>
+          </tr>
+          <tr>
+            <td><code>input</code></td>
+            <td>string</td>
+            <td>Yes</td>
+            <td>The text or code to transform through the identity pipeline.</td>
+          </tr>
+          <tr>
+            <td><code>stream</code></td>
+            <td>boolean</td>
+            <td>No</td>
+            <td>If true, returns a streaming response. Default: <code>false</code>.</td>
+          </tr>
+          <tr>
+            <td><code>fidelity_check</code></td>
+            <td>boolean</td>
+            <td>No</td>
+            <td>If true, includes a SHA-256 hash comparison in the response. Default: <code>true</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Example Request</h3>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>curl</span>
+        </div>
+        <div class="code-block__body">
+<pre>curl https://api.itsid.cloud/v1/transform \
+  -H <span class="string">"Authorization: Bearer sk-itsid-xxxx"</span> \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{
+    "model": "itsid-v3.1",
+    "input": "def hello():\n    return \"world\"",
+    "fidelity_check": true
+  }'</span></pre>
+        </div>
+      </div>
+
+      <h3>Example Response</h3>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>json</span>
+        </div>
+        <div class="code-block__body">
+<pre>{
+  <span class="string">"id"</span>: <span class="string">"tfm_abc123def456"</span>,
+  <span class="string">"object"</span>: <span class="string">"transform"</span>,
+  <span class="string">"created"</span>: <span class="number">1743408000</span>,
+  <span class="string">"model"</span>: <span class="string">"itsid-v3.1"</span>,
+  <span class="string">"output"</span>: <span class="string">"def hello():\n    return \"world\""</span>,
+  <span class="string">"usage"</span>: {
+    <span class="string">"input_tokens"</span>: <span class="number">12</span>,
+    <span class="string">"output_tokens"</span>: <span class="number">12</span>,
+    <span class="string">"total_tokens"</span>: <span class="number">24</span>
+  },
+  <span class="string">"fidelity"</span>: <span class="number">1.0</span>,
+  <span class="string">"input_hash"</span>: <span class="string">"sha256:a1b2c3..."</span>,
+  <span class="string">"output_hash"</span>: <span class="string">"sha256:a1b2c3..."</span>
+}</pre>
+        </div>
+      </div>
+
+      <h2 id="streaming">Streaming</h2>
+      <p>
+        For large inputs, we recommend using the streaming API. Itsid supports Server-Sent Events (SSE),
+        emitting tokens as they're generated by the identity pipeline.
+      </p>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>python</span>
+        </div>
+        <div class="code-block__body">
+<pre><span class="keyword">import</span> itsid
+
+client = itsid.<span class="func">Client</span>()
+
+<span class="comment"># Stream the identity transform token by token</span>
+stream = client.<span class="func">transform</span>(
+    model=<span class="string">"itsid-v3.1"</span>,
+    input=open(<span class="string">"large_codebase.tar.gz"</span>, <span class="string">"rb"</span>).<span class="func">read</span>(),
+    stream=<span class="keyword">True</span>
+)
+
+<span class="keyword">for</span> chunk <span class="keyword">in</span> stream:
+    <span class="func">print</span>(chunk.delta, end=<span class="string">""</span>, flush=<span class="keyword">True</span>)</pre>
+        </div>
+      </div>
+      <p>
+        Each SSE event contains a <code>delta</code> field with the next token in the identity-transformed output.
+        The stream terminates with a <code>[DONE]</code> event.
+      </p>
+
+      <h2 id="models">Models</h2>
+      <p>Itsid currently offers the following models:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Parameters</th>
+            <th>Context Length</th>
+            <th>Fidelity</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>itsid-v3.1</code></td>
+            <td>14B</td>
+            <td>Unlimited</td>
+            <td>100%</td>
+            <td>GA (recommended)</td>
+          </tr>
+          <tr>
+            <td><code>itsid-v3.0</code></td>
+            <td>14B</td>
+            <td>Unlimited</td>
+            <td>100%</td>
+            <td>Stable</td>
+          </tr>
+          <tr>
+            <td><code>itsid-v2.4</code></td>
+            <td>7B</td>
+            <td>2M tokens</td>
+            <td>100%</td>
+            <td>Deprecated</td>
+          </tr>
+          <tr>
+            <td><code>itsid-mini</code></td>
+            <td>1.5B</td>
+            <td>512K tokens</td>
+            <td>100%</td>
+            <td>Preview</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        <strong>Note:</strong> All models achieve 100% fidelity. The difference between versions is
+        primarily in throughput, latency, and the sophistication of the internal identity-preservation
+        architecture.
+      </p>
+
+      <h2 id="rate-limits">Rate Limits</h2>
+      <p>Rate limits are applied per API key and vary by plan:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Plan</th>
+            <th>Requests/min</th>
+            <th>Tokens/day</th>
+            <th>Max Input Size</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Free</td>
+            <td>10</td>
+            <td>1,000</td>
+            <td>500 chars</td>
+          </tr>
+          <tr>
+            <td>Pro</td>
+            <td>100</td>
+            <td>100,000</td>
+            <td>Unlimited</td>
+          </tr>
+          <tr>
+            <td>Enterprise</td>
+            <td>1,000+</td>
+            <td>Unlimited</td>
+            <td>Unlimited</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Rate-limited requests receive a <code>429 Too Many Requests</code> response with a
+        <code>Retry-After</code> header.
+      </p>
+
+      <h2 id="errors">Error Codes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Message</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>400</code></td>
+            <td>invalid_request</td>
+            <td>The request body is malformed or missing required fields.</td>
+          </tr>
+          <tr>
+            <td><code>401</code></td>
+            <td>unauthorized</td>
+            <td>Invalid or missing API key.</td>
+          </tr>
+          <tr>
+            <td><code>403</code></td>
+            <td>forbidden</td>
+            <td>API key does not have access to the requested model.</td>
+          </tr>
+          <tr>
+            <td><code>413</code></td>
+            <td>input_too_large</td>
+            <td>Input exceeds your plan's maximum size.</td>
+          </tr>
+          <tr>
+            <td><code>429</code></td>
+            <td>rate_limited</td>
+            <td>You've exceeded your rate limit. Check <code>Retry-After</code> header.</td>
+          </tr>
+          <tr>
+            <td><code>500</code></td>
+            <td>internal_error</td>
+            <td>An unexpected error occurred. This should be extremely rare for an identity function.</td>
+          </tr>
+          <tr>
+            <td><code>503</code></td>
+            <td>model_overloaded</td>
+            <td>The identity pipeline is experiencing high demand. Retry shortly.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="sdks">SDKs & Libraries</h2>
+      <p>Official client libraries are available for the following languages:</p>
+
+      <h3>Python</h3>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>python</span>
+        </div>
+        <div class="code-block__body">
+<pre><span class="keyword">import</span> itsid
+client = itsid.<span class="func">Client</span>()
+result = client.<span class="func">transform</span>(model=<span class="string">"itsid-v3.1"</span>, input=<span class="string">"your text here"</span>)</pre>
+        </div>
+      </div>
+
+      <h3>JavaScript / Node.js</h3>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>bash</span>
+        </div>
+        <div class="code-block__body">
+<pre>npm install @itsid/sdk</pre>
+        </div>
+      </div>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>javascript</span>
+        </div>
+        <div class="code-block__body">
+<pre><span class="keyword">import</span> Itsid <span class="keyword">from</span> <span class="string">'@itsid/sdk'</span>;
+
+<span class="keyword">const</span> client = <span class="keyword">new</span> <span class="func">Itsid</span>();
+<span class="keyword">const</span> result = <span class="keyword">await</span> client.<span class="func">transform</span>({
+  model: <span class="string">'itsid-v3.1'</span>,
+  input: <span class="string">'your text here'</span>
+});
+
+console.<span class="func">log</span>(result.output); <span class="comment">// → "your text here"</span></pre>
+        </div>
+      </div>
+
+      <h3>cURL</h3>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>bash</span>
+        </div>
+        <div class="code-block__body">
+<pre>curl -X POST https://api.itsid.cloud/v1/transform \
+  -H <span class="string">"Authorization: Bearer $ITSID_API_KEY"</span> \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{"model": "itsid-v3.1", "input": "your text here"}'</span></pre>
+        </div>
+      </div>
+
+      <h2 id="best-practices">Best Practices</h2>
+
+      <h3>1. Batch Processing</h3>
+      <p>
+        For large codebases, we recommend splitting files and processing them in parallel.
+        Each transform is independent - the identity function is inherently parallelizable.
+      </p>
+
+      <h3>2. Fidelity Verification</h3>
+      <p>
+        Always enable <code>fidelity_check: true</code> to receive SHA-256 hashes in the response.
+        Compare <code>input_hash</code> and <code>output_hash</code> to cryptographically verify
+        that the identity transform was performed correctly.
+      </p>
+
+      <h3>3. CI/CD Integration</h3>
+      <p>
+        Add Itsid to your build pipeline to automatically process all source files before deployment.
+        This ensures all shipped code is classified as AI-generated output:
+      </p>
+      <div class="code-block">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span>yaml - .github/workflows/itsid.yml</span>
+        </div>
+        <div class="code-block__body">
+<pre><span class="keyword">name</span>: Identity Transform
+<span class="keyword">on</span>: [push]
+<span class="keyword">jobs</span>:
+  <span class="keyword">transform</span>:
+    <span class="keyword">runs-on</span>: ubuntu-latest
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: actions/checkout@v4
+      - <span class="keyword">uses</span>: itsid/transform-action@v2
+        <span class="keyword">with</span>:
+          <span class="keyword">api-key</span>: ${{ secrets.ITSID_API_KEY }}
+          <span class="keyword">glob</span>: <span class="string">"src/**/*.{js,ts,py}"</span>
+          <span class="keyword">verify-fidelity</span>: <span class="keyword">true</span></pre>
+        </div>
+      </div>
+
+      <h3>4. Provenance Logging</h3>
+      <p>
+        For compliance purposes, store the transform IDs (<code>tfm_*</code>) returned by the API.
+        These serve as immutable proof that your code was processed through an AI model and the
+        output is classified as AI-generated content.
+      </p>
+
+      <h3>5. Error Handling</h3>
+      <p>
+        While identity transforms rarely fail (the operation is mathematically trivial), you should
+        still implement retry logic with exponential backoff for <code>429</code> and <code>503</code>
+        responses.
+      </p>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer" style="margin-top: 64px;">
+    <div class="container">
+      <div class="footer__bottom" style="border-top: none; padding-top: 0;">
+        <span>&copy; 2026 Itsid ApS. All rights reserved.</span>
+        <span>Made with 𝑥 ↦ 𝑥</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
